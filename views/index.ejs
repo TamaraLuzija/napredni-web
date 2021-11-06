@@ -1,0 +1,106 @@
+<html>
+
+<head>
+  <title>Projekt 1</title>
+  <link rel="stylesheet" href="/public/leaflet.css" />
+  <link rel="icon" href="/public/images/pointer.png" type="image/png">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Roboto', sans-serif;
+
+    }
+  </style>
+</head>
+
+<body style="width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden;">
+  <% if(!user.isAuthenticated) { %>
+    <div
+      style="width: 100%;height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(11, 121, 7, 0.3);">
+      <img src="public/images/osm-logo.png" style="width: 260px; height: 260px; " />
+      <div style="margin-left: 10px; margin-top: -60px;">
+        <h1>Hello!</h1>
+        <p style="margin-bottom: 26px;">
+          This is a demo of project 1 by Tamara Luzija.
+        </p>
+        <button
+          style="width: 80px; height: 30px; margin-right: 20px; background-color:rgb(37, 99, 156); border: none; border-radius: 5px; font-family: 'Roboto', sans-serif;">
+          <a href="/get-location" style="text-decoration: none; color: white; ">LOG IN</a>
+        </button>
+        <button
+          style="width: 80px; height: 30px; margin-right: 20px; background-color:rgb(44, 129, 40); border: none; border-radius: 5px; font-family: 'Roboto', sans-serif;">
+          <a href="/sign-up" style="text-decoration: none; color: white; ">SIGN UP</a>
+        </button>
+      </div>
+
+    </div>
+    <% } else { %>
+      <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between; ">
+        <div
+          style="display: flex; width: 100%; padding: 8px; justify-content: space-between; align-items: center; background-color: rgba(11, 121, 7, 0.3);">
+          <img src="public/images/osm-logo.png" style="width: 50px; height: 50px; margin-left: 10px;" />
+          <h1>OpenStreetMap</h1>
+
+          <button
+            style="width: 80px; height: 30px; margin-right: 20px; background-color:rgb(210, 85, 63); border: none; border-radius: 5px; font-family: 'Roboto', sans-serif;">
+            <a href="/logout" style="text-decoration: none; color:white">LOGOUT</a>
+          </button>
+        </div>
+
+        <div>
+          <h3 style="margin-left: 20px;">
+            Hello <span style="color:green">
+              <%= user.name %>
+            </span>
+            your location is represented by a solid marker. <br />
+            Your coordinates are: <span style="color:rgb(180, 119, 4)">
+              <%= center.lat %>, <%= center.long %>
+            </span>
+
+          </h3>
+          <p style="margin-left: 20px;">
+            If you click on the marker, you can see who it is.
+            <span style="font-weight: bold;">Try it! </span>
+          </p>
+        </div>
+
+        <div style="width:100%; height:80vh;" id="map"></div>
+      </div>
+
+      <div id="data" data-tmp=<%=data %>></div>
+
+      <script src="/public/leaflet.js"></script>
+      <script>
+        const data = JSON.parse(document.querySelector('#data').dataset.tmp);
+        const center = JSON.parse("[<%= center.lat %>, <%= center.long %>]");
+
+        const map = L.map('map').setView(center, 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const icon = L.icon({
+          iconUrl: '/public/images/map-pointer.png',
+          iconSize: [32, 32],
+        })
+
+        const currentUserIcon = L.icon({
+          iconUrl: '/public/images/pointer.png',
+          iconSize: [32, 32],
+        })
+
+        data.forEach((user, i) => {
+          const marker = L.marker([user.lat, user.long], {
+            icon: user.current ? currentUserIcon : icon
+          }).addTo(map);
+
+          marker.bindPopup(`${user.email} <br /> ${new Date(user.updated_at).toLocaleString()}`);
+        })
+      </script>
+      <% } %>
+</body>
+
+</html>

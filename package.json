@@ -1,0 +1,23 @@
+{
+  "name": "nrppw-project-1",
+  "version": "1.0.0",
+  "description": "Project 1 - OpenStreetMap + Auth0",
+  "main": "main",
+  "scripts": {
+    "dev": "nodemon .",
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-openid-connect": "^2.5.0",
+    "https": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}

@@ -1,0 +1,89 @@
+<html>
+
+<head>
+  <title>Projekt 1</title>
+  <style>
+    .spinner {
+      animation: rotate 2s linear infinite;
+      z-index: 2;
+      width: 50px;
+      height: 50px;
+    }
+
+    .spinner .path {
+      stroke: green;
+      stroke-linecap: round;
+      animation: dash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+      }
+
+      50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+      }
+
+      100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: rgba(11, 121, 7, 0.3);">
+
+  <h1>Hello <span>
+      <%= user.name %>
+    </span>, please allow your location.</h1>
+  <svg class=" spinner" viewBox="0 0 50 50">
+    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+  </svg>
+  <h3 id="status">Status: </h3>
+
+  <script>
+    /**
+     * @param {string} s
+     */
+    const setStatus = (s) => {
+      document.querySelector('h3#status').innerHTML = `Status: ${s}`;
+    }
+    setStatus('Getting location');
+    window.navigator.geolocation.getCurrentPosition((position) => {
+      setStatus('Saving location');
+      (async () => {
+        try {
+          const res = await fetch('/save', {
+            method: 'POST',
+            body: JSON.stringify({
+              lat: position.coords.latitude,
+              long: position.coords.longitude
+            }),
+            headers: {
+              "content-type": "application/json"
+            }
+          });
+
+          window.location.href = '/';
+        } catch (err) {
+          console.error(err)
+        }
+      })();
+    }, (error) => {
+      setStatus('Error getting location')
+      console.error(error)
+    });
+  </script>
+</body>
+
+</html>
