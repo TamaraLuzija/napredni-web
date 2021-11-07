@@ -64,14 +64,14 @@ app.get("/", (req, res) => {
 
   res.render("index", {
     user: req.user,
-    data: JSON.stringify([
+    data: [
       { ...userLocation, current: true },
       ...data
         .slice()
         .filter((d) => d.sub !== req.oidc.user.sub)
         .reverse()
         .slice(0, 4),
-    ]),
+    ],
     center: userLocation,
   });
 });
