@@ -20,7 +20,7 @@ app.use(
     authRequired: false,
     idpLogout: true,
     secret: process.env.SECRET,
-    baseURL: `${process.env.BASE_URL}:${port}`,
+    baseURL: process.env.BASE_URL,
     clientID: process.env.CLIENT_ID,
     issuerBaseURL: process.env.AUTH0_DOMAIN,
     clientSecret: process.env.CLIENT_SECRET,
