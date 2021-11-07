@@ -1,6 +1,6 @@
 # Projekt 1: Auth + Geo
 
-## Deploy link
+## Deployed link
 
 https://nrppw-project-1.herokuapp.com/
 
