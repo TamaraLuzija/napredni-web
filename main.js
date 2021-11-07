@@ -40,10 +40,12 @@ app.use((req, res, next) => {
 });
 
 app.post("/save", requiresAuth(), (req, res) => {
-  if (data.every((entry) => entry.sub !== req.oidc.user.sub)) {
-    data.push({ ...req.body, ...req.oidc.user });
+  const userIndex = data.findIndex((entry) => entry.sub === req.oidc.user.sub);
+  if (userIndex !== -1) {
+    data.splice(userIndex, 1);
   }
 
+  data.push({ ...req.body, ...req.oidc.user });
   res.json(data);
 });
 

@@ -68,12 +68,18 @@
 
         <div style="padding-left: 20px; padding-bottom: 10px;">
           <% for(i in data) { %>
-            <button onclick="selectUser(<%= i %>)"
-              style="background-color: rgb(233, 233, 104); border: none; border-radius: 5px; padding: 8px; margin-right: 10px;">
-              <%= data[i].name %>
-            </button>
-
-            <% } %>
+            <% if ( i < 1 ) { %>
+              <button onclick="selectUser(<%= i %>)"
+                style="background-color: green; color: white; border: none; border-radius: 5px; padding: 8px; margin-right: 10px;">
+                <%= data[i].name %>
+              </button>
+              <% } else { %>
+                <button onclick="selectUser(<%= i %>)"
+                  style="background-color: orange; color: white; border: none; border-radius: 5px; padding: 8px; margin-right: 10px;">
+                  <%= data[i].name %>
+                </button>
+                <% } %>
+                  <% } %>
 
         </div>
 
@@ -85,7 +91,7 @@
       <script src="/public/leaflet.js"></script>
       <script>
         const data = JSON.parse(document.querySelector('#data').value);
-        console.log(data)
+
         const center = JSON.parse("[<%= center.lat %>, <%= center.long %>]");
 
         const map = L.map('map').setView(center, 7);
@@ -114,6 +120,7 @@
         })
 
         const selectUser = (index) => {
+          console.log(index);
           map.setView(Object.values(markers[index]._latlng), 16, { "animate": true, "pan": { "duration": 4 } })
 
           markers[index].openPopup();
