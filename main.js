@@ -56,24 +56,23 @@ app.get("/", (req, res) => {
     return res.redirect("/get-location");
   }
 
+  if (!req.user.isAuthenticated) {
+    return res.render("index", { user });
+  }
+
+  const userLocation = data.find((d) => d.sub === req.oidc.user.sub);
+
   res.render("index", {
     user: req.user,
-    ...(req.user.isAuthenticated
-      ? {
-          data: JSON.stringify([
-            {
-              ...data.find((d) => d.sub === req.oidc.user.sub),
-              current: true,
-            },
-            ...data
-              .slice()
-              .filter((d) => d.sub !== req.oidc.user.sub)
-              .reverse()
-              .slice(0, 4),
-          ]),
-          center: data[0],
-        }
-      : {}),
+    data: JSON.stringify([
+      { ...userLocation, current: true },
+      ...data
+        .slice()
+        .filter((d) => d.sub !== req.oidc.user.sub)
+        .reverse()
+        .slice(0, 4),
+    ]),
+    center: userLocation,
   });
 });
 
