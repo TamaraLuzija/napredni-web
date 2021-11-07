@@ -57,7 +57,7 @@ app.get("/", (req, res) => {
   }
 
   if (!req.user.isAuthenticated) {
-    return res.render("index", { user });
+    return res.render("index", { user: req.user });
   }
 
   const userLocation = data.find((d) => d.sub === req.oidc.user.sub);
@@ -95,7 +95,7 @@ app.all("*", (req, res) => {
 
 const startServer = (server) => {
   server.listen(port, () => {
-    console.log(`Server running at ${process.env.BASE_URL}:${port}`);
+    console.log(`Server running at ${process.env.BASE_URL}`);
   });
 };
 
